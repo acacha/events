@@ -7,10 +7,17 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Note:** Replace ```Sergi Tur Badenas``` ```acacha``` ```https://github.com/acacha``` ```sergiturbadenas@gmail.com``` ```acacha``` ```events``` `````` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line. You can run `$ php prefill.php` in the command line to make all replacements at once. Delete the file prefill.php as well.
+Bla bla bla
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+# Laravel packages
+
+https://laravel.com/docs/5.5/packages
+
+3 passos instal·lació paquet laravel:
+
+1) Require
+2) Install ServiceProvider
+3) Install Facades (optional)
 
 ## Structure
 

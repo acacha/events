@@ -3,6 +3,7 @@
 namespace Acacha\Events\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
 /**
  * Class EventsServiceProvider.
@@ -17,6 +18,8 @@ class EventsServiceProvider extends ServiceProvider
             define('EVENTS_PATH', realpath(__DIR__.'/../../'));
         }
 
+        $this->registerEloquentFactoriesFrom(EVENTS_PATH . '/database/factories');
+
     }
 
     public function boot()
@@ -26,6 +29,7 @@ class EventsServiceProvider extends ServiceProvider
         $this->defineRoutes();
         $this->loadViews();
         $this->loadmigrations();
+        $this->loadFactories();
     }
 
     private function defineRoutes()
@@ -41,5 +45,16 @@ class EventsServiceProvider extends ServiceProvider
     private function loadMigrations()
     {
         $this->loadMigrationsFrom(EVENTS_PATH.'/database/migrations');
+    }
+
+    /**
+     * Register factories.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function registerEloquentFactoriesFrom($path)
+    {
+        $this->app->make(EloquentFactory::class)->load($path);
     }
 }

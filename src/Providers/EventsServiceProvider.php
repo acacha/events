@@ -29,7 +29,6 @@ class EventsServiceProvider extends ServiceProvider
         $this->defineRoutes();
         $this->loadViews();
         $this->loadmigrations();
-        $this->loadFactories();
     }
 
     private function defineRoutes()

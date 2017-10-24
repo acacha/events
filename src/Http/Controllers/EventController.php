@@ -55,7 +55,8 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return view('show_event',compact('event'));
+        dd($event->name);
+        return view('events::show_event',compact('event'));
     }
 
     /**

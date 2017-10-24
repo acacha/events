@@ -6,3 +6,5 @@
         <li>Description: {{ $event->description }}</li>
     </ul>
 @endforeach
+
+{{ Session::get('status') or '' }}

@@ -34,7 +34,7 @@ class EventsServiceProvider extends ServiceProvider
 
     private function defineRoutes()
     {
-        require EVENTS_PATH . '/src/routes/web.php';
+        require EVENTS_PATH . '/routes/web.php';
     }
 
     private function loadViews()

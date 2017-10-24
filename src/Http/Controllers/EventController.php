@@ -4,6 +4,8 @@ namespace Acacha\Events\Http\Controllers;
 
 use Acacha\Events\Models\Event;
 use Illuminate\Http\Request;
+use Redirect;
+use Session;
 
 /**
  * Class EventController.
@@ -55,7 +57,6 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        dd($event->name);
         return view('events::show_event',compact('event'));
     }
 
@@ -115,7 +116,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        Event::destroy($event->id);
-        return 'Deleted ok!';
+        $event->delete();
+        Session::flash('status', 'Event was deleted successful!');
+        return Redirect::to('/events');
     }
 }

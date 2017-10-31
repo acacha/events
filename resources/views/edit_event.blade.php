@@ -9,15 +9,13 @@
 </head>
 <body>
 
-{{ Session::get('status') }}
-
-
-<h1>Create Event:</h1>
+<h1>Edit Event:</h1>
 <form action="/events" method="POST">
+    <input type="hidden" name="_method" value="PUT">
     {{ csrf_field() }}
-    <input type="text" name="name" value="" placeholder="Name" id="name">
-    <textarea name="description" id="description" cols="30" rows="10" placeholder="Put your description here"></textarea>
-    <input type="submit" value="Create">
+    <input type="text" name="name" value="{{ $event->name }}" placeholder="Name">
+    <textarea name="description" id="description" cols="30" rows="10" placeholder="Put your description here">{{ $event->description }}</textarea>
+    <input type="submit" value="Update">
 </form>
 
 </body>

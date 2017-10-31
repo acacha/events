@@ -46,7 +46,22 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+//        dd($request->input());
+//        $event = new Event();
+//        $event->name = $request->input()->name;
+//        $event->description = $request->input()->description;
+//        $event->save();
+
+        Event::create($request->only(['name','description']));
+
+        Session::flash('status', 'Created ok!');
+//        return $event;
+        return Redirect::to('/events/create');
+
+//        Event::create([
+//            'name' => $request->input()->name,
+//            'description' => $request->input()->description,
+//        ]);
     }
 
     /**

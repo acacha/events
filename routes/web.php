@@ -3,6 +3,7 @@
 Route::group(['namespace' => "Acacha\Events\Http\Controllers", 'middleware' => 'web'], function () {
 //https://laravel.com/docs/5.5/routing
     Route::get('/events','EventController@index');
+    Route::get('/events/create','EventController@create');
     Route::get('/events/{event}','EventController@show');  // 2 Retrieve -> 1 recurs concret
     Route::get('/events_alt/{id}','EventController@show1');  // 2 Retrieve -> 1 recurs concret
 //Route::get('/events/{event}','EventController@show');  // 2 Retrieve -> 1 recurs concret
@@ -13,8 +14,8 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers",'middleware' => 'a
     Route::group(['middleware' => 'auth:api'], function() {
 
     });
-    Route::get('/events', 'APIEventsController@index');
-    Route::get('/events/{event}', 'APIEventsController@show');
+//    Route::get('/events', 'APIEventsController@index');
+//    Route::get('/events/{event}', 'APIEventsController@show');
 });
 
 //https://laravel.com/docs/5.5/routing

@@ -35,7 +35,7 @@ class EventController extends Controller
      */
     public function create()
     {
-
+        return view('events::create_event');
     }
 
     /**
@@ -93,7 +93,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        return view('events::edit_event',['event' => $event]);
     }
 
     /**
@@ -118,6 +118,7 @@ class EventController extends Controller
     {
         $event->delete();
         Session::flash('status', 'Event was deleted successful!');
+//        return $event;
         return Redirect::to('/events');
     }
 }

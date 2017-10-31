@@ -127,7 +127,7 @@ class EventController extends Controller
           $event->update($request->only(['name','description']));
 
         Session::flash('status', 'Edited ok!');
-        return Redirect::to('/events/edit');
+        return Redirect::to('/events/edit/' . $event->id);
     }
 
     /**

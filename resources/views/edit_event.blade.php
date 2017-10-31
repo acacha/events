@@ -10,7 +10,7 @@
 <body>
 
 <h1>Edit Event:</h1>
-<form action="/events" method="POST">
+<form action="/events/{{ $event->id }}" method="POST">
     <input type="hidden" name="_method" value="PUT">
     {{ csrf_field() }}
     <input type="text" name="name" value="{{ $event->name }}" placeholder="Name">

@@ -4,6 +4,7 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers", 'middleware' => '
 //https://laravel.com/docs/5.5/routing
     Route::get('/events','EventController@index');
     Route::post('/events','EventController@store');
+    Route::put('/events/{event}','EventController@update');
     Route::get('/events/create','EventController@create');
     Route::get('/events/edit/{event}','EventController@edit');
     Route::get('/events/{event}','EventController@show');  // 2 Retrieve -> 1 recurs concret

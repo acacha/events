@@ -120,7 +120,14 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+//        $event->name = $request->input('name');
+//        $event->description = $request->input('description');
+//        $event->save();
+//        dd($request->only(['name','description']));
+          $event->update($request->only(['name','description']));
+
+        Session::flash('status', 'Edited ok!');
+        return Redirect::to('/events/edit');
     }
 
     /**

@@ -8,11 +8,11 @@ use Redirect;
 use Session;
 
 /**
- * Class EventController.
+ * Class EventsController.
  *
  * @package Acacha\Events\Http\Controllers
  */
-class EventController extends Controller
+class EventsController extends Controller
 {
     /**
      * Display a listing of the resource.

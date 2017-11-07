@@ -53,6 +53,30 @@ class ApiEventControllerTest extends TestCase
     /**
      * @test
      */
+    public function can_show_an_event()
+    {
+        $event = factory(Event::class)->create();
+
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->json('GET', '/api/v1/events/' . $event->id);
+
+        $response->assertSuccessful();
+
+//        $response->dump();
+
+        $response->assertJson([
+            'id' => $event->id,
+            'name' => $event->name,
+            'created_at' => $event->created_at,
+            'updated_at' => $event->updated_at
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function cannot_add_event_if_not_logged()
     {
         $faker = Factory::create();

@@ -2,28 +2,29 @@
 
 namespace Acacha\Events\Console\Commands;
 
+use Acacha\Events\Models\Event;
 use Illuminate\Console\Command;
+use Mockery\Exception;
 
 /**
- * Class Esborrar.
- *
+ * Class CreateEventCommand.
  * @package Acacha\Events\Console\Commands
  */
-class Esborrar extends Command
+class CreateEventCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'esborrar:todo';
+    protected $signature = 'event:create {name? : The event name}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'This commands creates a new event';
 
     /**
      * Create a new command instance.
@@ -42,6 +43,13 @@ class Esborrar extends Command
      */
     public function handle()
     {
-        $this->info('esborrar TODO');
+        try {
+            Event::create([
+                'name' => $this->argument('name') ? $this->argument('name') : $this->ask('Event name?')
+            ]);
+        } catch ( Exception $e) {
+            $this->error('Error');
+        }
+        $this->info('Event has been added to database succesfully');
     }
 }

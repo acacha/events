@@ -2,6 +2,7 @@
 
 namespace Acacha\Events\Providers;
 
+use Acacha\Events\Console\Commands\CreateEventCommand;
 use Acacha\Events\Console\Commands\Esborrar;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
@@ -31,11 +32,14 @@ class EventsServiceProvider extends ServiceProvider
         $this->loadCommands();
     }
 
+    /**
+     * Load commands
+     */
     protected function loadCommands()
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Esborrar::class,
+                CreateEventCommand::class,
             ]);
         }
     }

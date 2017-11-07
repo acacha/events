@@ -13,7 +13,6 @@ class EventsServiceProvider extends ServiceProvider
 
     public function register()
     {
-//        dump('Registering Events package');
         if (!defined('EVENTS_PATH')) {
             define('EVENTS_PATH', realpath(__DIR__.'/../../'));
         }
@@ -24,7 +23,6 @@ class EventsServiceProvider extends ServiceProvider
 
     public function boot()
     {
-//        dump('Booting Events package');
 
         $this->defineRoutes();
         $this->loadViews();
@@ -34,7 +32,16 @@ class EventsServiceProvider extends ServiceProvider
 
     private function defineRoutes()
     {
+        $this->defineWebRoutes();
+        $this->defineApiRoutes();
+    }
+
+    protected function defineWebRoutes()     {
         require EVENTS_PATH . '/routes/web.php';
+    }
+
+    protected function defineApiRoutes()     {
+        require EVENTS_PATH . '/routes/api.php';
     }
 
     private function loadViews()

@@ -6,7 +6,10 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers", 'middleware' => '
           // Events Web without API only Laravel PHP
           Route::get('/events_php','EventsController@index');
           Route::get('/events_php/create','EventsController@create');
+          Route::get('/events_php/edit','EventsController@edit');
           Route::get('/events_php/{event}','EventsController@show');
+          Route::post('/events_php','EventsController@store');
+          Route::delete('/events_php/{event}','EventsController@destroy');
 
           // Events API
           Route::get('/api/v1/events','APIEventsController@index');

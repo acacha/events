@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Acacha\Events\Models\Event;
 use App\User;
+use Illuminate\Support\Facades\View;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,6 +33,7 @@ class EventsControllerTest extends TestCase
         $events = factory(Event::class,3)->create();
 
         $user = factory(User::class)->create();
+        View::share('user',$user);
         $this->actingAs($user);
 
         $response = $this->get('/events_php');

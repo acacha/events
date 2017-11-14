@@ -1,20 +1,29 @@
-<h1>Event:</h1>
+@extends('adminlte::layouts.app')
 
-{{ Session::get('status') }}
+@section('htmlheader_title')
+    Events list
+@endsection
+
+@section('main-content')
+    <h1>Event:</h1>
+
+    {{ Session::get('status') }}
 
 
-@foreach ($events as $event)
-    <ul>
-        <li>Name: {{ $event->name }}</li>
-        <li>Description: {{ $event->description }}</li>
-        <li>
-            <form action="/events/{{ $event->id }}" method="POST">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <input type="submit" value="delete">
-            </form>
-        </li>
-    </ul>
-@endforeach
+    @foreach ($events as $event)
+        <ul>
+            <li>Name: {{ $event->name }}</li>
+            <li>Description: {{ $event->description }}</li>
+            <li>
+                <form action="/events/{{ $event->id }}" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="submit" value="delete">
+                </form>
+            </li>
+        </ul>
+    @endforeach
 
-{{ Session::get('status') or '' }}
+    {{ Session::get('status') or '' }}
+@endsection
+

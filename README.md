@@ -7,8 +7,6 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Bla bla bla
-
 # Laravel packages
 
 https://laravel.com/docs/5.5/packages
@@ -30,7 +28,6 @@ src/
 tests/
 vendor/
 ```
-
 
 ## Install
 

@@ -17,14 +17,14 @@ class CreateEventCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'event:create {name? : The event name}';
+    protected $signature = 'event:create {name? : The event name} {description? : The event description}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This commands creates a new event';
+    protected $description = 'Creates a new event';
 
     /**
      * Create a new command instance.
@@ -45,7 +45,8 @@ class CreateEventCommand extends Command
     {
         try {
             Event::create([
-                'name' => $this->argument('name') ? $this->argument('name') : $this->ask('Event name?')
+                'name' => $this->argument('name') ? $this->argument('name') : $this->ask('Event name?'),
+                'description' => $this->argument('description') ? $this->argument('description') : $this->ask('Event description?')
             ]);
         } catch ( Exception $e) {
             $this->error('Error');

@@ -16,18 +16,20 @@ class CreateEventCommandTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testItCreatesNewEvent()
+    /**
+     * @test
+     */
+    public function create_new_event()
     {
-        $this->artisan('event:create', ['name' => 'Comprar pa']);
+        $this->artisan('event:create', ['name' => 'Pool party','description' => 'with cool girls']);
 
         $resultAsText = Artisan::output();
 
         $this->assertDatabaseHas('events', [
-           'name' => 'Comprar pa'
+           'name' => 'Pool party',
+           'description' => 'with cool girls',
         ]);
 
-        // Receive "Event has been added to database succesfully."
-//        $this->assertTrue(str_contains($resultAsText,'Event has been added to database succesfully'));
         $this->assertContains('Event has been added to database succesfully', $resultAsText);
 
     }
@@ -39,14 +41,20 @@ class CreateEventCommandTest extends TestCase
         $command->shouldReceive('ask')
             ->once()
             ->with('Event name?')
-            ->andReturn('Comprar llet');
+            ->andReturn('Pool party');
+
+        $command->shouldReceive('ask')
+            ->once()
+            ->with('Event description?')
+            ->andReturn('with cool girls');
 
         $this->app['Illuminate\Contracts\Console\Kernel']->registerCommand($command);
 
         $this->artisan('event:create');
 
         $this->assertDatabaseHas('events', [
-            'name' => 'Comprar llet'
+            'name' => 'Pool party',
+            'description' => 'with cool girls',
         ]);
 
         $resultAsText = Artisan::output();

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Acacha\Events\Models\Event;
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -11,30 +12,30 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  *
  * @package Tests\Feature
  */
-class EventsTest extends TestCase
+class EventsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     public function setUp()
     {
         parent::setUp();
-//        $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
     }
 
     /**
-     * @group failing
+     * List all events.
      *
      * @test
      */
-    public function testShowAllEvents()
+    public function can_list_events()
     {
+        $events = factory(Event::class,3)->create();
 
-        // 1) Preparo el test
-        $events = factory(Event::class,50)->create();
-        // 2) Executo el codi que vull provar
-        $response = $this->get('/events');
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
 
-        // 3) Comprovo: assert
+        $response = $this->get('/events_php');
+
         $response->assertStatus(200);
         $response->assertSuccessful();
         $response->assertViewIs('events::list_events');
@@ -49,13 +50,17 @@ class EventsTest extends TestCase
 
     /**
      * Test show and event
+     *
+     * @test
      */
-    public function testShowAnEvent()
+    public function can_show_an_event()
     {
-//        $this->withoutExceptionHandling();
         $event = factory(Event::class)->create();
-        $response = $this->get('/events/' . $event->id);
-        // Comprovo
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->get('/events_php/' . $event->id);
+
         $response->assertStatus(200);
         $response->assertSuccessful();
         $response->assertViewIs('events::show_event');
@@ -68,37 +73,50 @@ class EventsTest extends TestCase
     }
 
     /**
-     * @group todo1
+     * Test show and event.
+     *
+     * @test
      */
-    public function testNotShowAnEvent()
+    public function cannot_show_an_event()
     {
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
 
-        // Executo
-        $response = $this->get('/events/9999999');
-        // Comprovo
+        $response = $this->get('/events_php/9999999');
+
         $response->assertStatus(404);
 
     }
 
-    public function testShowCreateEventForm()
+    /**
+     * Show create event form.
+     *
+     * @test
+     */
+    public function show_create_event_form()
     {
-        // Preparo
-        // Executo
-        $response = $this->get('/events/create');
-        // Comprovo
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
+        $response = $this->get('/events_php/create');
+
         $response->assertStatus(200);
         $response->assertViewIs('events::create_event');
         $response->assertSeeText('Create Event');
     }
 
-    public function testShowEditEventForm()
+    /**
+     * Show edit event form.
+     * @test
+     */
+    public function show_edit_event_form()
     {
-        // Preparo
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+
         $event = factory(Event::class)->create();
 
-        // Executo
-        $response = $this->get('/events/edit/' . $event->id);
-        // Comprovo
+        $response = $this->get('/events_php/edit/' . $event->id);
         $response->assertStatus(200);
         $response->assertViewIs('events::edit_event');
         $response->assertSeeText('Edit Event');
@@ -118,7 +136,7 @@ class EventsTest extends TestCase
 //        $event->save();
 
         // Executo
-        $response = $this->post('/events',[
+        $response = $this->post('/events_php',[
             'name' => $event->name,
             'description' => $event->description,
         ]);
@@ -141,7 +159,7 @@ class EventsTest extends TestCase
 
         // Executo
         $newEvent = factory(Event::class)->make();
-        $response = $this->put('/events/' . $event->id,[
+        $response = $this->put('/events_php/' . $event->id,[
             'name' => $newEvent->name,
             'description' => $newEvent->description,
         ]);
@@ -173,7 +191,7 @@ class EventsTest extends TestCase
         // Preparo
         $event = factory(Event::class)->create();
         // Executo
-        $response = $this->call('DELETE','/events/' . $event->id);
+        $response = $this->call('DELETE','/events_php/' . $event->id);
 
 //        $response->dump();
 

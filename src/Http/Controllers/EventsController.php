@@ -14,6 +14,7 @@ use Session;
  */
 class EventsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -21,11 +22,8 @@ class EventsController extends Controller
      */
     public function index()
     {
-        // CRUD -> Retrieve --> List
-        // BREAD -> Browse Read Edit Add Delete
         $events = Event::all();
         return view('events::list_events',compact('events'));
-
     }
 
     /**

@@ -27,6 +27,8 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Can list events.
+     *
      * @test
      */
     public function can_list_events()
@@ -40,8 +42,6 @@ class ApiEventControllerTest extends TestCase
 
         $response->assertSuccessful();
 
-//        $response->dump();
-
         $response->assertJsonStructure([[
           'id',
           'name',
@@ -51,6 +51,8 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Can show an event.
+     *
      * @test
      */
     public function can_show_an_event()
@@ -64,8 +66,6 @@ class ApiEventControllerTest extends TestCase
 
         $response->assertSuccessful();
 
-//        $response->dump();
-
         $response->assertJson([
             'id' => $event->id,
             'name' => $event->name,
@@ -75,22 +75,24 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Cannot add event if not logged.
+     *
      * @test
      */
     public function cannot_add_event_if_not_logged()
     {
         $faker = Factory::create();
 
-        // EXECUTE
         $response = $this->json('POST', '/api/v1/events', [
             'name' => $name = $faker->word
         ]);
 
-        // ASSERT
         $response->assertStatus(401);
     }
 
     /**
+     * Cannot add event if no name provided
+     *
      * @test
      */
     public function cannot_add_event_if_no_name_provided()
@@ -98,37 +100,32 @@ class ApiEventControllerTest extends TestCase
         $user = factory(User::class)->create();
         $this->actingAs($user);
 
-        // EXECUTE
         $response = $this->json('POST', '/api/v1/events');
 
-        // ASSERT
         $response->assertStatus(422);
     }
 
     /**
+     * Can add an event.
+     *
      * @test
      */
     public function can_add_a_event()
     {
-        // PREPARE
         $faker = Factory::create();
         $user = factory(User::class)->create();
 
         $this->actingAs($user);
 
-        // EXECUTE
         $response = $this->json('POST', '/api/v1/events', [
             'name' => $name = $faker->word
         ]);
 
-        // ASSERT
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('events', [
            'name' => $name
         ]);
-
-//        $response->dump();
 
         $response->assertJson([
             'name' => $name
@@ -136,6 +133,8 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Can delete an event.
+     *
      * @test
      */
     public function can_delete_event()
@@ -160,6 +159,8 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Cannot delete unexisting event.
+     *
      * @test
      */
     public function cannot_delete_unexisting_event()
@@ -174,6 +175,8 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
+     * Can edit an event.
+     *
      * @test
      */
     public function can_edit_event()

@@ -17,10 +17,13 @@ class EventsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * Set up.
+     */
     public function setUp()
     {
         parent::setUp();
-        $this->withoutExceptionHandling();
+//        $this->withoutExceptionHandling();
     }
 
     /**
@@ -51,7 +54,7 @@ class EventsControllerTest extends TestCase
     }
 
     /**
-     * Test show and event
+     * Test show and event.
      *
      * @test
      */
@@ -59,6 +62,7 @@ class EventsControllerTest extends TestCase
     {
         $event = factory(Event::class)->create();
         $user = factory(User::class)->create();
+        View::share('user',$user);
         $this->actingAs($user);
 
         $response = $this->get('/events_php/' . $event->id);
@@ -82,6 +86,7 @@ class EventsControllerTest extends TestCase
     public function cannot_show_an_event()
     {
         $user = factory(User::class)->create();
+        View::share('user',$user);
         $this->actingAs($user);
 
         $response = $this->get('/events_php/9999999');
@@ -98,6 +103,7 @@ class EventsControllerTest extends TestCase
     public function show_create_event_form()
     {
         $user = factory(User::class)->create();
+        View::share('user',$user);
         $this->actingAs($user);
 
         $response = $this->get('/events_php/create');
@@ -109,11 +115,13 @@ class EventsControllerTest extends TestCase
 
     /**
      * Show edit event form.
+     *
      * @test
      */
     public function show_edit_event_form()
     {
         $user = factory(User::class)->create();
+        View::share('user',$user);
         $this->actingAs($user);
 
         $event = factory(Event::class)->create();
@@ -127,39 +135,45 @@ class EventsControllerTest extends TestCase
         $response->assertSee($event->description);
     }
 
-    public function testStoreEventForm()
+    /**
+     * Test store event.
+     * @test
+     */
+    public function store_event()
     {
-        // Preparo
+        $user = factory(User::class)->create();
+        View::share('user',$user);
+        $this->actingAs($user);
+
         $event = factory(Event::class)->make();
 
-//        $event = new Event();
-//        $event->name = 'prova';
-//        $event->description = 'asdasdasdasd';
-//        $event->save();
-
-        // Executo
         $response = $this->post('/events_php',[
             'name' => $event->name,
             'description' => $event->description,
         ]);
-        // Comprovo
 
         $this->assertDatabaseHas('events',[
             'name' => $event->name,
             'description' => $event->description,
         ]);
 
-        $response->assertRedirect('events/create');
-//        $response->assertSeeText('Created ok!');
+        $response->assertRedirect('events_php/create');
 
     }
 
-    public function testUpdateEventForm()
+    /**
+     * Update event.
+     *
+     * @test
+     */
+    public function update_event()
     {
-        // Preparo
+        $user = factory(User::class)->create();
+        View::share('user',$user);
+        $this->actingAs($user);
+
         $event = factory(Event::class)->create();
 
-        // Executo
         $newEvent = factory(Event::class)->make();
         $response = $this->put('/events_php/' . $event->id,[
             'name' => $newEvent->name,
@@ -178,36 +192,30 @@ class EventsControllerTest extends TestCase
             'description' => $event->description,
         ]);
 
-        // Comprovo
-        $response->assertRedirect('events/edit');
-//        $response->assertSeeText('Edited ok!');
-
-
+        $response->assertRedirect('events_php/edit/' . $event->id);
     }
 
     /**
-     * @group caca1
+     * Delete event.
+     *
+     * @test
      */
-    public function testDeleteEvent()
+    public function delete_event()
     {
-        // Preparo
+        $user = factory(User::class)->create();
+        View::share('user',$user);
+        $this->actingAs($user);
+
         $event = factory(Event::class)->create();
-        // Executo
-        $response = $this->call('DELETE','/events_php/' . $event->id);
 
-//        $response->dump();
+        $response = $this->delete('/events_php/' . $event->id);
 
-        // Comprovo
         $this->assertDatabaseMissing('events',[
             'name' => $event->name,
             'description' => $event->description,
         ]);
 
-//        $response->assertStatus(200);
-        $response->assertRedirect('events');
-        // TODO
-//        $response->assertSeeText('Event was deleted successful');
-
+        $response->assertRedirect('events_php');
 
     }
 }

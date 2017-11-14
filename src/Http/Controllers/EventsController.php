@@ -44,29 +44,19 @@ class EventsController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->input());
-//        $event = new Event();
-//        $event->name = $request->input()->name;
-//        $event->description = $request->input()->description;
-//        $event->save();
-
         Event::create($request->only(['name','description']));
 
         Session::flash('status', 'Created ok!');
-//        return $event;
-        return Redirect::to('/events/create');
 
-//        Event::create([
-//            'name' => $request->input()->name,
-//            'description' => $request->input()->description,
-//        ]);
+        return Redirect::to('/events_php/create');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @param Event $event
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Event $event)
     {
@@ -74,35 +64,10 @@ class EventsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function show1($id)
-    {
-//        dump($id);
-//        dump( $event = Event::find($id));
-
-//        if ($event == null) abort(404);
-//        try {
-//            $event = Event::findOrFail($id);
-//        } catch(\Exception $e) {
-//            abort(404);
-//        }
-
-        $event = Event::findOrFail($id);
-
-//        dump($event->name);
-//        https://laravel.com/docs/5.5/eloquent
-//        return $event;
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @param Event $event
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Event $event)
     {
@@ -112,33 +77,28 @@ class EventsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Event $event
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Event $event)
     {
-//        $event->name = $request->input('name');
-//        $event->description = $request->input('description');
-//        $event->save();
-//        dd($request->only(['name','description']));
-          $event->update($request->only(['name','description']));
+        $event->update($request->only(['name','description']));
 
         Session::flash('status', 'Edited ok!');
-        return Redirect::to('/events/edit/' . $event->id);
+        return Redirect::to('/events_php/edit/' . $event->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @param Event $event
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Event $event)
     {
         $event->delete();
         Session::flash('status', 'Event was deleted successful!');
-//        return $event;
-        return Redirect::to('/events');
+        return Redirect::to('/events_php');
     }
 }

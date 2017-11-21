@@ -36,7 +36,7 @@ class ApiEventControllerTest extends TestCase
         $events = factory(Event::class,3)->create();
 
         $user = factory(User::class)->create();
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('GET', '/api/v1/events');
 
@@ -60,7 +60,7 @@ class ApiEventControllerTest extends TestCase
         $event = factory(Event::class)->create();
 
         $user = factory(User::class)->create();
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('GET', '/api/v1/events/' . $event->id);
 
@@ -98,7 +98,7 @@ class ApiEventControllerTest extends TestCase
     public function cannot_add_event_if_no_name_provided()
     {
         $user = factory(User::class)->create();
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('POST', '/api/v1/events');
 
@@ -115,7 +115,7 @@ class ApiEventControllerTest extends TestCase
         $faker = Factory::create();
         $user = factory(User::class)->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('POST', '/api/v1/events', [
             'name' => $name = $faker->word
@@ -142,7 +142,7 @@ class ApiEventControllerTest extends TestCase
         $event = factory(Event::class)->create();
         $user = factory(User::class)->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('DELETE','/api/v1/events/' . $event->id);
 
@@ -167,7 +167,7 @@ class ApiEventControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         $response = $this->json('DELETE','/api/v1/events/1');
 
@@ -185,7 +185,7 @@ class ApiEventControllerTest extends TestCase
         $event = factory(Event::class)->create();
 
         $user = factory(User::class)->create();
-        $this->actingAs($user);
+        $this->actingAs($user,'api');
 
         // EXECUTE
         $response = $this->json('PUT', '/api/v1/events/' . $event->id, [

@@ -7,6 +7,10 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers",'middleware' => 'a
 
     Route::group(['middleware' => 'auth:api'], function() {
             //HERE API PRIVATE ROUTES
-
+          Route::get('/events',              'APIEventsController@index');
+          Route::get('/events/{event}',      'APIEventsController@show');
+          Route::post('/events',             'APIEventsController@store');
+          Route::put('/events/{event}',      'APIEventsController@update');
+          Route::delete('/events/{event}',   'APIEventsController@destroy');
     });
 });

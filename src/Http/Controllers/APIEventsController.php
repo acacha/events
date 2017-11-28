@@ -47,7 +47,7 @@ class APIEventsController extends Controller
      */
     public function store(StoreEvent $request)
     {
-        return Event::create($request->only(['name','description']));
+        return Event::create($request->only(['name','user_id','description']));
     }
 
     /**

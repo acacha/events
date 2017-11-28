@@ -7,11 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Class StoreEvent
+ * Class UserStoreEvent
  *
  * @package App\Http\Requests
  */
-class StoreEvent extends FormRequest
+class UserStoreEvent extends FormRequest
 {
     use ChecksPermissions;
 
@@ -22,9 +22,7 @@ class StoreEvent extends FormRequest
      */
     public function authorize()
     {
-        if ($this->hasPermissionTo('store-event')) return true;
-        if (Auth::user()->id === $this->user_id) return true;
-        return false;
+        return true;
     }
 
     /**

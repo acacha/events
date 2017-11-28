@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Support\Facades\Artisan;
 use Mockery;
 use Tests\TestCase;
@@ -17,16 +18,20 @@ class CreateEventCommandTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * Create new event.
+     *
      * @test
      */
     public function create_new_event()
     {
-        $this->artisan('event:create', ['name' => 'Pool party','description' => 'with cool girls']);
+        $user = factory(User::class)->create();
+        $this->artisan('event:create', ['name' => 'Pool party','user_id' => $user->id,'description' => 'with cool girls']);
 
         $resultAsText = Artisan::output();
 
         $this->assertDatabaseHas('events', [
            'name' => 'Pool party',
+            'user_id' => $user->id,
            'description' => 'with cool girls',
         ]);
 
@@ -34,10 +39,14 @@ class CreateEventCommandTest extends TestCase
 
     }
 
-    public function testItAsksForAEventNameAndThenCreatesNewEvent()
+    /**
+     * testItAsksForAEventNameAndThenCreatesNewEvent
+     * @test
+     */
+    public function itAsksForAEventNameAndThenCreatesNewEvent()
     {
         $command = Mockery::mock('Acacha\Events\Console\Commands\CreateEventCommand[ask]');
-
+        $user = factory(User::class)->create();
         $command->shouldReceive('ask')
             ->once()
             ->with('Event name?')
@@ -48,12 +57,18 @@ class CreateEventCommandTest extends TestCase
             ->with('Event description?')
             ->andReturn('with cool girls');
 
+        $command->shouldReceive('ask')
+            ->once()
+            ->with('User id?')
+            ->andReturn($user->id);
+
         $this->app['Illuminate\Contracts\Console\Kernel']->registerCommand($command);
 
         $this->artisan('event:create');
 
         $this->assertDatabaseHas('events', [
             'name' => 'Pool party',
+            'user_id' => $user->id,
             'description' => 'with cool girls',
         ]);
 

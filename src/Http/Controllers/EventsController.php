@@ -44,7 +44,7 @@ class EventsController extends Controller
      */
     public function store(Request $request)
     {
-        Event::create($request->only(['name','description']));
+        Event::create($request->only(['name','user_id','description']));
 
         Session::flash('status', 'Created ok!');
 

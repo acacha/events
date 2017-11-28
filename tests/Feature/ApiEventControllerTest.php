@@ -34,18 +34,20 @@ class ApiEventControllerTest extends TestCase
      */
     public function can_list_events()
     {
-        $events = factory(Event::class,3)->create();
+        factory(Event::class,3)->create();
 
         $user = factory(User::class)->create();
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
         $response = $this->json('GET', '/api/v1/events');
 
         $response->assertSuccessful();
-
+        $this->assertCount(3,json_decode($response->getContent()));
         $response->assertJsonStructure([[
           'id',
           'name',
+          'user_id',
+          'description',
           'created_at',
           'updated_at'
         ]]);
@@ -76,22 +78,6 @@ class ApiEventControllerTest extends TestCase
     }
 
     /**
-     * Cannot add event if not logged.
-     *
-     * @test
-     */
-    public function cannot_add_event_if_not_logged()
-    {
-        $faker = Factory::create();
-
-        $response = $this->json('POST', '/api/v1/events', [
-            'name' => $name = $faker->word
-        ]);
-
-        $response->assertStatus(401);
-    }
-
-    /**
      * Cannot add event if no name provided
      *
      * @test
@@ -115,75 +101,29 @@ class ApiEventControllerTest extends TestCase
     {
         $faker = Factory::create();
         $user = factory(User::class)->create();
+        $otherUser = factory(User::class)->create();
 
         $this->loginAsManager($user,'api');
 
         $response = $this->json('POST', '/api/v1/events', [
-            'name' => $name = $faker->word
+            'name' => $name = $faker->word,
+            'description' => $description = $faker->sentence,
+            'user_id' => $otherUser->id
         ]);
 
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('events', [
-           'name' => $name
+           'name' => $name,
+           'description' => $description,
+           'user_id' => $otherUser->id
         ]);
 
         $response->assertJson([
-            'name' => $name
+            'name' => $name,
+            'description' => $description,
+            'user_id' => $otherUser->id
         ]);
-    }
-
-    /**
-     * Can delete an event.
-     *
-     * @test
-     */
-    public function can_delete_event()
-    {
-        $event = factory(Event::class)->create();
-        $user = factory(User::class)->create();
-
-        $this->loginAsManager($user,'api');
-
-        $response = $this->json('DELETE','/api/v1/events/' . $event->id);
-
-        $response->assertSuccessful();
-
-        $this->assertDatabaseMissing('events',[
-           'id' =>  $event->id
-        ]);
-
-        $response->assertJson([
-            'id' => $event->id,
-            'name' => $event->name
-        ]);
-    }
-
-    /**
-     * Login as events manager.
-     *
-     * @param $user
-     */
-    protected function loginAsManager($user, $driver = 'api')
-    {
-        $user->assignRole('events-manager');
-        $this->actingAs($user,$driver);
-    }
-
-    /**
-     * Cannot delete unexisting event.
-     *
-     * @test
-     */
-    public function cannot_delete_unexisting_event()
-    {
-        $user = factory(User::class)->create();
-
-        $this->loginAsManager($user,'api');
-
-        $response = $this->json('DELETE','/api/v1/events/1');
-
-        $response->assertStatus(404);
     }
 
     /**
@@ -221,6 +161,59 @@ class ApiEventControllerTest extends TestCase
             'id' => $event->id,
             'name' => $newName
         ]);
+    }
+
+    /**
+     * Can delete an event.
+     *
+     * @test
+     */
+    public function can_delete_event()
+    {
+        $event = factory(Event::class)->create();
+        $user = factory(User::class)->create();
+
+        $this->loginAsManager($user,'api');
+
+        $response = $this->json('DELETE','/api/v1/events/' . $event->id);
+
+        $response->assertSuccessful();
+
+        $this->assertDatabaseMissing('events',[
+           'id' =>  $event->id
+        ]);
+
+        $response->assertJson([
+            'id' => $event->id,
+            'name' => $event->name
+        ]);
+    }
+
+    /**
+     * Cannot delete unexisting event.
+     *
+     * @test
+     */
+    public function cannot_delete_unexisting_event()
+    {
+        $user = factory(User::class)->create();
+
+        $this->loginAsManager($user,'api');
+
+        $response = $this->json('DELETE','/api/v1/events/1');
+
+        $response->assertStatus(404);
+    }
+
+    /**
+     * Login as events manager.
+     *
+     * @param $user
+     */
+    protected function loginAsManager($user, $driver = 'api')
+    {
+        $user->assignRole('events-manager');
+        $this->actingAs($user,$driver);
     }
 
 }

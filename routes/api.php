@@ -18,5 +18,8 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers",'middleware' => 'a
           Route::get('/users/{user}',               'APIUsersController@show');
           Route::put('/users/{user}',               'APIUsersController@update');
           Route::delete('/users/{user}',            'APIUsersController@destroy');
+
+          Route::get('/user/events',                'APIUserEventsController@index');
+          Route::post('/user/events',               'APIUserEventsController@store');
     });
 });

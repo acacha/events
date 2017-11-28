@@ -142,20 +142,22 @@ class EventsControllerTest extends TestCase
      */
     public function store_event()
     {
-        $user = factory(User::class)->create();
-        View::share('user',$user);
-        $this->actingAs($user);
+        $loggedUser = factory(User::class)->create();
+        View::share('user',$loggedUser);
+        $this->actingAs($loggedUser);
 
-        $event = factory(Event::class)->make();
+        $user = factory(User::class)->create();
 
         $response = $this->post('/events_php',[
-            'name' => $event->name,
-            'description' => $event->description,
+            'name' => 'Pool party',
+            'user_id' => $user->id,
+            'description' => 'So cool!'
         ]);
 
         $this->assertDatabaseHas('events',[
-            'name' => $event->name,
-            'description' => $event->description,
+            'name' => 'Pool party',
+            'user_id' => $user->id,
+            'description' => 'So cool!'
         ]);
 
         $response->assertRedirect('events_php/create');

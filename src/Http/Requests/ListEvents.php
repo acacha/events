@@ -22,7 +22,7 @@ class ListEvents extends FormRequest
     public function authorize()
     {
         if ($this->hasPermissionTo('list-events')) return true;
-        return true;
+        return false;
     }
 
     /**

@@ -22,6 +22,7 @@ class ApiUserControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        initialize_events_permissions();
 //        $this->withoutExceptionHandling();
     }
 
@@ -35,7 +36,7 @@ class ApiUserControllerTest extends TestCase
         factory(User::class,3)->create();
 
         $user = factory(User::class)->create();
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
         $response = $this->json('GET', '/api/v1/users');
 
@@ -61,7 +62,7 @@ class ApiUserControllerTest extends TestCase
         $user = factory(User::class)->create();
 
         $loggedUser = factory(User::class)->create();
-        $this->actingAs($loggedUser,'api');
+        $this->loginAsManager($loggedUser,'api');
 
         $response = $this->json('GET', '/api/v1/users/' . $user->id);
 
@@ -71,9 +72,13 @@ class ApiUserControllerTest extends TestCase
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            //TODO password
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at
+        ]);
+
+        $response->assertJsonMissing([
+            'password',
+            'remember_token'
         ]);
     }
 
@@ -94,6 +99,60 @@ class ApiUserControllerTest extends TestCase
     }
 
     /**
+     * Cannot add user with already existing email
+     *
+     * @test
+     */
+    public function cannot_add_user_with_already_existing_email()
+    {
+        $user = factory(User::class)->create();
+        $this->loginAsManager($user,'api');
+
+        $response = $this->json('POST', '/api/v1/users',[
+            'name' => 'Pepe',
+            'email' => $user->email
+        ]);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => 'The given data was invalid.',
+            'errors' => [
+                'email' => [
+                    0 => 'The email has already been taken.'
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Cannot add user with invalid email
+     *
+     * @test
+     */
+    public function cannot_add_user_with_invalid_email()
+    {
+        $user = factory(User::class)->create();
+        $this->loginAsManager($user,'api');
+
+        $response = $this->json('POST', '/api/v1/users',[
+            'name' => 'Pepe',
+            'email' => 'asdasdsadasd'
+        ]);
+
+        $response->assertStatus(422);
+
+        $response->assertJson([
+            'message' => 'The given data was invalid.',
+            'errors' => [
+                'email' => [
+                    0 => 'The email must be a valid email address.'
+                ]
+            ]
+        ]);
+    }
+
+    /**
      * Cannot add user if no name provided
      *
      * @test
@@ -101,11 +160,23 @@ class ApiUserControllerTest extends TestCase
     public function cannot_add_user_if_no_name_provided()
     {
         $user = factory(User::class)->create();
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
         $response = $this->json('POST', '/api/v1/users');
 
         $response->assertStatus(422);
+
+        $response->assertJson([
+           'message' => 'The given data was invalid.',
+           'errors' => [
+                'name' => [
+                    0 => 'The name field is required.'
+                ],
+                'email' => [
+                    0 => 'The email field is required.'
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -113,25 +184,33 @@ class ApiUserControllerTest extends TestCase
      *
      * @test
      */
-    public function can_add_a_user()
+    public function can_add_an_user()
     {
-        $faker = Factory::create();
         $user = factory(User::class)->create();
 
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
         $response = $this->json('POST', '/api/v1/users', [
-            'name' => $name = $faker->word
+            'name' => 'Sergi Tur Badenas',
+            'email' => 'sergiturbadenas@gmail.com',
+            'password' => '123456'
         ]);
 
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('users', [
-           'name' => $name
+           'name' => 'Sergi Tur Badenas',
+           'email' => 'sergiturbadenas@gmail.com',
         ]);
 
         $response->assertJson([
-            'name' => $name
+            'name' => 'Sergi Tur Badenas',
+            'email' => 'sergiturbadenas@gmail.com',
+        ]);
+
+        $response->assertJsonMissing([
+            'password',
+            'remember_token'
         ]);
     }
 
@@ -143,22 +222,34 @@ class ApiUserControllerTest extends TestCase
     public function can_delete_user()
     {
         $user = factory(User::class)->create();
-        $user = factory(User::class)->create();
+        $otherUser = factory(User::class)->create();
 
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
-        $response = $this->json('DELETE','/api/v1/users/' . $user->id);
+
+        $response = $this->json('DELETE','/api/v1/users/' . $otherUser->id);
 
         $response->assertSuccessful();
 
         $this->assertDatabaseMissing('users',[
-           'id' =>  $user->id
+           'id' =>  $otherUser->id
         ]);
 
         $response->assertJson([
-            'id' => $user->id,
-            'name' => $user->name
+            'id' => $otherUser->id,
+            'name' => $otherUser->name
         ]);
+    }
+
+    /**
+     * Login as events manager.
+     *
+     * @param $user
+     */
+    protected function loginAsManager($user, $driver = 'api')
+    {
+        $user->assignRole('users-manager');
+        $this->actingAs($user,$driver);
     }
 
     /**
@@ -170,9 +261,9 @@ class ApiUserControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
-        $response = $this->json('DELETE','/api/v1/users/1');
+        $response = $this->json('DELETE','/api/v1/users/2');
 
         $response->assertStatus(404);
     }
@@ -184,32 +275,29 @@ class ApiUserControllerTest extends TestCase
      */
     public function can_edit_user()
     {
-        // PREPARE
         $user = factory(User::class)->create();
+        $otherUser = factory(User::class)->create();
 
-        $user = factory(User::class)->create();
-        $this->actingAs($user,'api');
+        $this->loginAsManager($user,'api');
 
-        // EXECUTE
-        $response = $this->json('PUT', '/api/v1/users/' . $user->id, [
+        $response = $this->json('PUT', '/api/v1/users/' . $otherUser->id, [
             'name' => $newName = 'NOU NOM'
         ]);
 
-        // ASSERT
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('users', [
-            'id' => $user->id,
+            'id' => $otherUser->id,
             'name' => $newName
         ]);
 
         $this->assertDatabaseMissing('users', [
-            'id' => $user->id,
-            'name' => $user->name,
+            'id' => $otherUser->id,
+            'name' => $otherUser->name,
         ]);
 
         $response->assertJson([
-            'id' => $user->id,
+            'id' => $otherUser->id,
             'name' => $newName
         ]);
     }

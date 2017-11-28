@@ -23,6 +23,7 @@ class EventsControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+        initialize_events_permissions();
 //        $this->withoutExceptionHandling();
     }
 

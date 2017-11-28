@@ -1,5 +1,10 @@
 # events
 
+[![Latest Stable Version](https://poser.pugx.org/acacha/events/v/stable)](https://packagist.org/packages/acacha/events)
+[![Total Downloads](https://poser.pugx.org/acacha/events/downloads)](https://packagist.org/packages/acacha/events)
+[![Monthly Downloads](https://poser.pugx.org/acacha/events/d/monthly)](https://packagist.org/packages/acacha/events)
+[![Daily Downloads](https://poser.pugx.org/acacha/events/d/daily)](https://packagist.org/packages/acacha/events)
+[![composer.lock](https://poser.pugx.org/acacha/events/composerlock)](https://packagist.org/packages/acacha/events)
 [![StyleCI](https://styleci.io/repos/107275975/shield?branch=master)](https://styleci.io/repos/107275975)
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)

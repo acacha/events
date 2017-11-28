@@ -6,11 +6,11 @@ use Acacha\Events\Http\Requests\Traits\ChecksPermissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class DestroyEvent
+ * Class UpdateUser
  *
  * @package App\Http\Requests
  */
-class DestroyEvent extends FormRequest
+class UpdateUser extends FormRequest
 {
     use ChecksPermissions;
 
@@ -21,8 +21,8 @@ class DestroyEvent extends FormRequest
      */
     public function authorize()
     {
-        if ($this->hasPermissionTo('destroy-event')) return true;
-        if ($this->owns('event')) return true;
+        if ($this->hasPermissionTo('update-user')) return true;
+        if ($this->owns('user')) return true;
         return false;
     }
 
@@ -33,6 +33,8 @@ class DestroyEvent extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'name' => 'required'
+        ];
     }
 }

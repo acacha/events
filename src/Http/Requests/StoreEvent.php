@@ -2,6 +2,7 @@
 
 namespace Acacha\Events\Http\Requests;
 
+use Acacha\Events\Http\Requests\Traits\ChecksPermissions;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreEvent extends FormRequest
 {
+    use ChecksPermissions;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,7 +21,8 @@ class StoreEvent extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        if ($this->hasPermissionTo('store-event')) return true;
+        return false;
     }
 
     /**

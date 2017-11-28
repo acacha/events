@@ -71,20 +71,83 @@ class ApiUserEventControllerTest extends TestCase
         $response->assertSuccessful();
     }
 
+    /**
+     * User can show owned event.
+     *
+     * @test
+     */
     public function user_can_show_owned_event() {
+        $event = factory(Event::class)->create();
 
+        $this->actingAs($event->user,'api');
+
+        $response = $this->json('GET', '/api/v1/events/' . $event->id);
+
+        $response->assertSuccessful();
+
+        $response->assertJson([
+            'id' => $event->id,
+            'name' => $event->name,
+            'user_id' => $event->user_id,
+            'created_at' => $event->created_at,
+            'updated_at' => $event->updated_at
+        ]);
     }
 
+    /**
+     * User can update owned event.
+     *
+     * @test
+     */
     public function user_can_update_owned_event() {
+        $event = factory(Event::class)->create();
 
+        $this->actingAs($event->user,'api');
+
+        $response = $this->json('PUT', '/api/v1/events/' . $event->id, [
+            'name' => $newName = 'NOU NOM'
+        ]);
+
+        $response->assertSuccessful();
+
+        $this->assertDatabaseHas('events', [
+            'id' => $event->id,
+            'name' => $newName
+        ]);
+
+        $this->assertDatabaseMissing('events', [
+            'id' => $event->id,
+            'name' => $event->name,
+        ]);
+
+        $response->assertJson([
+            'id' => $event->id,
+            'name' => $newName
+        ]);
     }
 
+    /**
+     * User can destroy owned event.
+     *
+     * @test
+     */
     public function user_can_destroy_owned_event() {
+        $event = factory(Event::class)->create();
 
+        $this->actingAs($event->user,'api');
+
+        $response = $this->json('DELETE','/api/v1/events/' . $event->id);
+
+        $response->assertSuccessful();
+
+        $this->assertDatabaseMissing('events',[
+            'id' =>  $event->id
+        ]);
+
+        $response->assertJson([
+            'id' => $event->id,
+            'name' => $event->name
+        ]);
     }
-
-    // TODO
-//- Un usuari no pot veure, editar ni eliminar esdeveniment d'altres usuaris sinó té rol de manager
-
 
 }

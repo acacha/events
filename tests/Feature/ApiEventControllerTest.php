@@ -72,6 +72,7 @@ class ApiEventControllerTest extends TestCase
         $response->assertJson([
             'id' => $event->id,
             'name' => $event->name,
+            'user_id' => $event->user_id,
             'created_at' => $event->created_at,
             'updated_at' => $event->updated_at
         ]);
@@ -133,18 +134,15 @@ class ApiEventControllerTest extends TestCase
      */
     public function can_edit_event()
     {
-        // PREPARE
         $event = factory(Event::class)->create();
 
         $user = factory(User::class)->create();
         $this->loginAsManager($user,'api');
 
-        // EXECUTE
         $response = $this->json('PUT', '/api/v1/events/' . $event->id, [
             'name' => $newName = 'NOU NOM'
         ]);
 
-        // ASSERT
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('events', [

@@ -30,7 +30,7 @@ trait ChecksPermissions
      */
     protected function owns($model,$field = 'user_id')
     {
-        if (Auth::user()->id === $this->$model->$field) return true;
+        if (Auth::user()->id == $this->$model->$field) return true;
         return false;
     }
 }

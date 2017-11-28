@@ -4,6 +4,14 @@ use App\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+if (!function_exists('assignPermission')) {
+    function assignPermission($role, $permission) {
+        if (! $role->hasPermissionTo($permission)) {
+            $role->givePermissionTo($permission);
+        }
+    }
+}
+
 if (!function_exists('initialize_events_permissions')) {
     function initialize_events_permissions()
     {
@@ -15,11 +23,10 @@ if (!function_exists('initialize_events_permissions')) {
 
         $role = Role::firstOrCreate(['name' => 'events-manager']);
 
-        $role->givePermissionTo('list-events');
-        $role->givePermissionTo('show-event');
-        $role->givePermissionTo('store-event');
-        $role->givePermissionTo('update-event');
-        $role->givePermissionTo('destroy-event');
+        assignPermission($role,'show-event');
+        assignPermission($role,'store-event');
+        assignPermission($role,'update-event');
+        assignPermission($role,'destroy-event');
 
 
         Permission::firstOrCreate(['name' => 'list-users']);
@@ -30,11 +37,11 @@ if (!function_exists('initialize_events_permissions')) {
 
         $role = Role::firstOrCreate(['name' => 'users-manager']);
 
-        $role->givePermissionTo('list-users');
-        $role->givePermissionTo('show-user');
-        $role->givePermissionTo('store-user');
-        $role->givePermissionTo('update-user');
-        $role->givePermissionTo('destroy-user');
+        assignPermission($role,'list-users');
+        assignPermission($role,'show-user');
+        assignPermission($role,'store-user');
+        assignPermission($role,'update-user');
+        assignPermission($role,'destroy-user');
     }
 }
 
@@ -53,5 +60,6 @@ if (!function_exists('first_user_as_events_manager')) {
     function first_user_as_events_manager()
     {
         User::all()->first()->assignRole('events-manager');
+        User::all()->first()->assignRole('users-manager');
     }
 }

@@ -3,7 +3,11 @@
 namespace Acacha\Events\Providers;
 
 use Acacha\Events\Console\Commands\CreateEventCommand;
+use Acacha\Events\Console\Commands\DeleteEventCommand;
+use Acacha\Events\Console\Commands\EditEventCommand;
 use Acacha\Events\Console\Commands\Esborrar;
+use Acacha\Events\Console\Commands\ListEventsCommand;
+use Acacha\Events\Console\Commands\ShowEventCommand;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
@@ -39,7 +43,11 @@ class EventsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
+                ListEventsCommand::class,
                 CreateEventCommand::class,
+                EditEventCommand::class,
+                ShowEventCommand::class,
+                DeleteEventCommand::class
             ]);
         }
     }

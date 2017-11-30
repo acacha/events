@@ -23,6 +23,7 @@ if (!function_exists('initialize_events_permissions')) {
 
         $role = Role::firstOrCreate(['name' => 'events-manager']);
 
+        assignPermission($role,'list-events');
         assignPermission($role,'show-event');
         assignPermission($role,'store-event');
         assignPermission($role,'update-event');

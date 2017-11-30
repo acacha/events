@@ -40,10 +40,11 @@ class CreateEventCommandTest extends TestCase
     }
 
     /**
-     * testItAsksForAEventNameAndThenCreatesNewEvent
+     * Create new event with wizard.
+     *
      * @test
      */
-    public function itAsksForAEventNameAndThenCreatesNewEvent()
+    public function create_new_event_with_wizard()
     {
         $command = Mockery::mock('Acacha\Events\Console\Commands\CreateEventCommand[ask]');
         $user = factory(User::class)->create();

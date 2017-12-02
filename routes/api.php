@@ -1,6 +1,7 @@
 <?php
 
-Route::group(['namespace' => "Acacha\Events\Http\Controllers",'middleware' => 'api','prefix' => 'api/v1', 'middleware' => ['throttle','bindings']], function () {
+Route::group(['namespace' => "Acacha\Events\Http\Controllers",
+    'prefix' => 'api/v1', 'middleware' => ['api','throttle','bindings']], function () {
 
     //HERE API PUBLIC ROUTES
 

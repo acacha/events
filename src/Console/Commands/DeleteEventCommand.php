@@ -20,7 +20,7 @@ class DeleteEventCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'event:delete {id? : The event id to edit}';
+    protected $signature = 'event:delete {id? : The event id to delete}';
 
     /**
      * The console command description.

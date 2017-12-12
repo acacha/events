@@ -17,6 +17,8 @@ class ApiEventControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    const MANAGER = 'events-manager';
+
     /**
      * Set up tests.
      */
@@ -25,6 +27,17 @@ class ApiEventControllerTest extends TestCase
         parent::setUp();
         initialize_events_permissions();
 //        $this->withoutExceptionHandling();
+    }
+
+    /**
+     * Login as events manager.
+     *
+     * @param $user
+     */
+    protected function loginAsManager($user, $driver = 'api')
+    {
+        $user->assignRole(self::MANAGER);
+        $this->actingAs($user,$driver);
     }
 
     /**
@@ -201,17 +214,6 @@ class ApiEventControllerTest extends TestCase
         $response = $this->json('DELETE','/api/v1/events/1');
 
         $response->assertStatus(404);
-    }
-
-    /**
-     * Login as events manager.
-     *
-     * @param $user
-     */
-    protected function loginAsManager($user, $driver = 'api')
-    {
-        $user->assignRole('events-manager');
-        $this->actingAs($user,$driver);
     }
 
 }

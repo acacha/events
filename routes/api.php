@@ -22,5 +22,13 @@ Route::group(['namespace' => "Acacha\Events\Http\Controllers",
 
           Route::get('/user/events',                'APIUserEventsController@index');
           Route::post('/user/events',               'APIUserEventsController@store');
+
+          // CRUDDY BY DESIGN. See README
+
+          Route::post('/attended-events/{event}' ,      'APIAttendedEventsController@store');
+          Route::delete('/attended-events/{event}' ,    'APIAttendedEventsController@destroy');
+
+          // NAME / DESCRIPTION / UPDATE_AT / CREATED_AT
+
     });
 });

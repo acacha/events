@@ -1,5 +1,36 @@
 <template>
     <div>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-description">
+            Launch Default Modal
+        </button>
+
+        <div id="prova" class="editable">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus nostrum, tempore. At dolore dolorum ea expedita laudantium nam, numquam officiis repudiandae tenetur totam? Autem debitis, ducimus ea quia quod sapiente.
+        </div>
+
+        <div class="modal fade" id="modal-description">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Description</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="editor">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus nostrum, tempore. At dolore dolorum ea expedita laudantium nam, numquam officiis repudiandae tenetur totam? Autem debitis, ducimus ea quia quod sapiente.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
         <widget :loading="loading">
             <p slot="title">Events</p>
             <div v-cloak>
@@ -10,14 +41,22 @@
                         <th>Event</th>
                         <th>Completed</th>
                         <th>Description</th>
+                        <th>Created at</th>
+                        <th>Updated at</th>
                         <th>Actions</th>
                     </tr>
                     <tr v-for="(event, index) in filteredEvents">
                         <td>{{ index + 1 }}</td>
                         <td>{{ event.name }}</td>
-                        <td> TODO </td>
+                        <td> <toggle-button :value="true"/> </td>
                         <td class="description"> {{ event.description }} </td>
-                        <td>TODO</td>
+                        <td>
+                            <a class="pull-right" data-toggle="tooltip" :title="event.created_at" v-text="human(event.created_at)"></a>
+                        </td>
+                        <td>
+                            <a class="pull-right" data-toggle="tooltip" :title="event.updated_at" v-text="human(event.updated_at)"></a>
+                        </td>
+                        <td>TODO actions here</td>
                     </tr>
                     </tbody>
                 </table>
@@ -67,6 +106,11 @@
     </div>
 </template>
 
+<style src="quill/dist/quill.snow.css"></style>
+
+<style src="medium-editor/dist/css/medium-editor.min.css"></style>
+<style src="medium-editor/dist/css/themes/default.min.css"></style>
+
 <style>
 
     .description {
@@ -93,13 +137,12 @@
     }
 </style>
 
-
-
 <script>
 
   import Users from './Users'
   import Form from 'acacha-forms'
-
+  import Quill from 'quill'
+  import MediumEditor from 'medium-editor'
 
   // visibility filters
   var filters = {
@@ -121,11 +164,14 @@
   const API_URL = '/api/v1/events'
 
   import { wait } from './utils.js'
+  import moment from 'moment'
+  import {config} from '../config/events.js'
 
   export default {
     components: { Users },
     data() {
       return {
+        quill: true,
         loading: false,
         editedEvent: null,
         filter: 'all',
@@ -145,6 +191,9 @@
       }
     },
     methods: {
+      human(date) {
+        return moment(date).fromNow()
+      },
       userSelected(user) {
         this.form.user_id = user.id
       },
@@ -180,6 +229,13 @@
       }
     },
     mounted() {
+
+      new Quill('#editor', {
+        theme: 'snow'
+      })
+
+      new MediumEditor('.editable');
+
       let url = API_URL
       this.loading = true
       axios.get(url).then((response) =>  {

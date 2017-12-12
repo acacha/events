@@ -1,4 +1,5 @@
 export const config = {
   locale: 'ca',
-  example : 'example' ,
+  date_format: 'DD-MM-YYYY',
+  editor : 'medium' ,   // Other valid options: quill
 }

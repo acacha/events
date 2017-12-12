@@ -3,19 +3,37 @@
         <widget :loading="loading">
             <p slot="title">Events</p>
             <div v-cloak>
-                <ul>
-                    <li v-for="event in filteredEvents" :class="{ completed: isCompleted(event) }"
-                        @dblclick="updateEvent(event)">
-                        <input type="text" v-if="event == editedEvent">
-                        <div v-else>
-                            {{event.name}}
-                            <i class="fa fa-pencil" aria-hidden="true" @click="updateEvent(event)"></i>
-                            <i class="fa fa-refresh fa-spin fa-lg" v-if=" event.id === eventBeingDeleted"></i>
-                            <i class="fa fa-times" aria-hidden="true" @click="deleteEvent(event)"></i>
-                        </div>
 
-                    </li>
-                </ul>
+                <table class="table table-bordered table-hover">
+                    <tbody><tr>
+                        <th style="width: 10px">#</th>
+                        <th>Event</th>
+                        <th>Completed</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr v-for="(event, index) in filteredEvents">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ event.name }}</td>
+                        <td> TODO </td>
+                        <td class="description"> {{ event.description }} </td>
+                        <td>TODO</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--<ul>-->
+                    <!--<li v-for="event in filteredEvents" :class="{ completed: isCompleted(event) }"-->
+                        <!--@dblclick="updateEvent(event)">-->
+                        <!--<input type="text" v-if="event == editedEvent">-->
+                        <!--<div v-else>-->
+                            <!--{{event.name}}-->
+                            <!--<i class="fa fa-pencil" aria-hidden="true" @click="updateEvent(event)"></i>-->
+                            <!--<i class="fa fa-refresh fa-spin fa-lg" v-if=" event.id === eventBeingDeleted"></i>-->
+                            <!--<i class="fa fa-times" aria-hidden="true" @click="deleteEvent(event)"></i>-->
+                        <!--</div>-->
+
+                    <!--</li>-->
+                <!--</ul>-->
                 <div class="btn-group">
                     <button @click="show('all')" type="button" class="btn btn-default" :class="{ 'btn-primary': this.filter === 'all' }">All</button>
                     <button @click="show('completed')" type="button" class="btn btn-default" :class="{ 'btn-primary': this.filter === 'completed' }">Completed</button>
@@ -50,6 +68,14 @@
 </template>
 
 <style>
+
+    .description {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     li.completed {
         text-decoration : line-through;
     }

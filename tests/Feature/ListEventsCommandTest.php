@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
  *
  * @package Tests\Feature
  */
-class ListTaskCommandTest extends TestCase
+class ListEventsCommandTest extends TestCase
 {
     use RefreshDatabase;
 

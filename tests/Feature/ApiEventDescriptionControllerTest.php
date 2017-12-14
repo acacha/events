@@ -40,72 +40,36 @@ class APIAttendedEventControllerTest extends TestCase
     }
 
     /**
-     * Store.
+     * Update
      *
      * @test
      */
-    public function store()
+    public function update()
     {
         $user = factory(User::class)->create();
         $this->loginAsManager($user,'api');
         $event = factory(Event::class)->create();
 
-        $response = $this->json('POST', '/api/v1/attended-events/' . $event->id);
+        $response = $this->json('PUT', '/api/v1/events/' . $event->id . '/description',[
+            'description' => 'new description'
+        ]);
 
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('events', [
             'id' => $event->id,
             'name' => $event->name,
-            'attend' => true,
-            'description' => $event->description,
+            'attend' => $event->attend,
+            'description' => 'new description',
             'user_id' => $event->user->id
         ]);
 
         $response->assertJson([
             'id' => $event->id,
             'name' => $event->name,
-            'attend' => true,
-            'description' => $event->description,
+            'attend' => $event->attend,
+            'description' => 'new description',
             'user_id' => $event->user->id
-        ]);
-    }
-
-    /**
-     * Destroy.
-     *
-     * @test
-     */
-    protected function destroy()
-    {
-        $user = factory(User::class)->create();
-        $this->loginAsManager($user,'api');
-
-        $event = factory(Event::class)->create();
-
-        $response = $this->json('DELETE','/api/v1/attended-events/' . $event->id);
-
-        $response->assertSuccessful();
-
-        $this->assertDatabaseHas('events', [
-            'id' => $event->id,
-            'name' => $event->name,
-            'attend' => false,
-            'description' => $event->description,
-            'user_id' => $event->user->id
-        ]);
-
-        $response->assertJson([
-            'id' => $event->id,
-            'name' => $event->name,
-            'attend' => false,
-            'description' => $event->description,
-            'user_id' => $event->user->id
-        ]);
-
-        $response->assertJson([
-            'id' => $event->id,
-            'name' => $event->name
         ]);
     }
 
